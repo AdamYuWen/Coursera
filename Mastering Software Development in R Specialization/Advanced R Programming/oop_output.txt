@@ -1,0 +1,61 @@
+> library(readr)
+> library(magrittr)
+> source("oop_code.R")
+> 
+> setwd("C:/Users/yu_wen/Documents/Coursera/Mastering Software Development in R Specialization/Advanced R Programming")
+> data <- read_csv("data/MIE.csv")
+Parsed with column specification:
+cols(
+  id = col_integer(),
+  visit = col_integer(),
+  room = col_character(),
+  value = col_double(),
+  timepoint = col_integer()
+)
+> 
+> # Test LongitudionalData Class ################################################
+> df <- make_LD(data)
+> print(class(df))
+[1] "LongitudinalData"
+> print(df)
+[1] "There are 10 subjects."
+> 
+> # Test Subject Class ##########################################################
+> subject_df <- subject(df, 14)
+> print(class(subject_df))
+[1] "Subject"
+> print(subject_df)
+[1] "Subject ID: 14"
+> summary(subject_df)
+# A tibble: 3 x 4
+# Groups:   visit [3]
+  visit bedroom `family  room` `living room`
+  <int>   <dbl>          <dbl>         <dbl>
+1     0    4.79          NA             2.75
+2     1    3.40           8.43         NA   
+3     2   18.6           NA            22.6 
+> 
+> # Test Visit Class ############################################################
+> visit_df <- visit(subject_df, 0)
+> print(class(visit_df))
+[1] "Visit"
+> print(visit_df)
+[1] "Subject ID: 14 and Visit ID: 0"
+> 
+> # Test Room Class #############################################################
+> room_df <- room(visit_df, "bedroom")
+> print(class(room_df))
+[1] "Room"
+> print(room_df)
+[1] "Subject ID: 14 and Visit ID: 0 and Room ID: bedroom"
+> summary(room_df)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.750   2.750   2.750   4.787   6.000  20.000 
+> 
+> # Test Summary Class ##########################################################
+> print(room_df %>% summary)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.750   2.750   2.750   4.787   6.000  20.000 
+[1] "ID 14 2.75"             "ID 14 2.75"             "ID 14 2.75"             "ID 14 4.78659188034188"
+[5] "ID 14 6"                "ID 14 20"              
+> 
